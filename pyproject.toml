@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "trailhub"
+version = "0.1.0"
+description = "Trailhub is a system for logging actions performed on your system"
+authors = ["flavien-hugs <flavienhugs@pm.me>"]
+packages = [{include = "src" }]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
