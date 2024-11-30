@@ -11,7 +11,7 @@ _log = logging.getLogger(__name__)
 
 
 async def startup_db_client(
-        app: FastAPI, mongodb_uri: str, database_name: str, document_models: List[Type[Document]]
+    app: FastAPI, mongodb_uri: str, database_name: str, document_models: List[Type[Document]]
 ) -> None:
     """
     Initialize the database client and document models for the application and store the client in the app object for
