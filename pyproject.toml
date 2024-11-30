@@ -32,6 +32,9 @@ pytest-dotenv = "^0.5.2"
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
+[tool.poetry.scripts]
+app = 'src.run:app'
+
 [tool.pytest.ini_options]
 env_files = "tests/.test.env"
 env_override_existing_values = 1
