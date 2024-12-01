@@ -3,9 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 
-from src.common.config import shutdown_db_client, startup_db_client
 from src.config import settings
-from src.models import TrailHubModel
 
 
 @asynccontextmanager
@@ -17,12 +15,8 @@ async def lifespan(app: FastAPI):
         document_models=[TrailHubModel],
     )
 
-    yield
-
-    await shutdown_db_client(app=app)
 
 app: FastAPI = FastAPI(
-    lifespan=lifespan,
     title=f"UNSTA: {settings.APP_NAME}",
     description="A system for logging actions performed on your system.",
     docs_url="/trailhub/docs",

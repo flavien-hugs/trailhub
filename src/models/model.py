@@ -1,8 +1,8 @@
 from datetime import datetime
 from typing import Optional
 
-from beanie import Document, Insert, PydanticObjectId, after_event
-from pydantic import Field, BaseModel, field_validator
+from beanie import after_event, Document, Insert, PydanticObjectId
+from pydantic import BaseModel, Field
 
 from src.config import settings
 
@@ -31,10 +31,7 @@ class TrailHubModel(CreateLoggingModel, Document):
         name = settings.TRAILHUB_MODEL_NAME.split(".")[1]
 
     class Config:
-        json_encoders = {
-            datetime: lambda v: v.isoformat(),
-            PydanticObjectId: str
-        }
+        json_encoders = {datetime: lambda v: v.isoformat(), PydanticObjectId: str}
 
     @after_event(Insert)
     def set_anonymous_status(self, *args, **kwargs):
