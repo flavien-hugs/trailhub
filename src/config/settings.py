@@ -19,7 +19,7 @@ class TrailHubSettings(BaseSettings):
         default=True, alias="APP_ACCESS_LOG", description="Enable/Disable access log"
     )
     APP_DEFAULT_PORT: Optional[int] = Field(
-        default=1993, alias="APP_DEFAULT_PORT", description="Default port of the application"
+        default=8000, alias="APP_DEFAULT_PORT", description="Default port of the application"
     )
     ALLOW_ANONYM_PUSH: Optional[bool] = Field(
         default=False, alias="ALLOW_ANONYM_PUSH", description="Allow anonymous push to the config"
