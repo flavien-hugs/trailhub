@@ -1,1 +1,1 @@
-from .model import TrailHubModel, CreateLoggingModel  # noqa: F401
+from .model import TrailHubModel, CreateLoggingModel, LoggingFilter  # noqa: F401

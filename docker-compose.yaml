@@ -18,7 +18,7 @@ services:
         depends_on:
             - mongo
         ports:
-            - "1993:${APP_DEFAULT_PORT}"
+            - "8993:${APP_DEFAULT_PORT}"
         env_file:
             - ./dotenv/app.env
         logging: *logging

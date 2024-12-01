@@ -2,8 +2,13 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
+from fastapi_pagination import add_pagination
 
+from src.common.config import shutdown_db_client, startup_db_client
 from src.config import settings
+from src.models import TrailHubModel
+from .router import trailhub_router
+from src.common.helpers.exception import setup_exception_handlers
 
 
 @asynccontextmanager
@@ -15,8 +20,13 @@ async def lifespan(app: FastAPI):
         document_models=[TrailHubModel],
     )
 
+    yield
+
+    await shutdown_db_client(app=app)
+
 
 app: FastAPI = FastAPI(
+    lifespan=lifespan,
     title=f"UNSTA: {settings.APP_NAME}",
     description="A system for logging actions performed on your system.",
     docs_url="/trailhub/docs",
@@ -33,3 +43,8 @@ async def read_root():
 @app.get("/trailhub/@ping", tags=["DEFAULT"], summary="Check if server is available")
 async def ping():
     return {"message": "pong !"}
+
+
+app.include_router(router=trailhub_router)
+add_pagination(parent=app)
+setup_exception_handlers(app=app)

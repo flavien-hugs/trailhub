@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
 from beanie import after_event, Document, Insert, PydanticObjectId
 from pydantic import BaseModel, Field
@@ -7,25 +7,31 @@ from pydantic import BaseModel, Field
 from src.config import settings
 
 
-class CreateLoggingModel(BaseModel):
+class LoggingBaseModel(BaseModel):
+    user_id: Optional[Union[PydanticObjectId, str]] = Field(default=None, description="User ID")
+    device: Optional[str] = Field(default=None, description="Device used")
+    os: Optional[str] = Field(default=None, description="Operating system")
+    is_tablet: Optional[bool] = Field(default=None, description="Is the device a tablet")
+    is_mobile: Optional[bool] = Field(default=None, description="Is the device a mobile")
+    is_pc: Optional[bool] = Field(default=None, description="Is the device a PC")
+    is_bot: Optional[bool] = Field(default=None, description="Is the device a bot")
+
+
+class LoggingFilter(LoggingBaseModel):
+    source: Optional[str] = Field(default=None, description="Source of the log")
+    created: Optional[datetime] = Field(default=None, description="Date of creation")
+    anonymous: Optional[bool] = Field(default=None, description="Is the user anonymous")
+
+
+class CreateLoggingModel(LoggingBaseModel):
     source: str = Field(..., description="Source of the log")
     message: str = Field(..., description="Message to log")
     address_ip: str = Field(..., description="Address IP")
-    user_id: Optional[PydanticObjectId] = Field(default=None, description="User ID")
-    device: Optional[str] = Field(default=None, description="Device used")
-    os: Optional[str] = Field(default=None, description="Operating system")
-    user_agent: Optional[str] = Field(default=None, description="User agent")
-    browser: Optional[str] = Field(default=None, description="Browser used")
-    is_tablet: Optional[bool] = Field(default=False, description="Is the device a tablet")
-    is_mobile: Optional[bool] = Field(default=False, description="Is the device a mobile")
-    is_pc: Optional[bool] = Field(default=False, description="Is the device a PC")
-    is_bot: Optional[bool] = Field(default=False, description="Is the device a bot")
-    is_touch_capable: Optional[bool] = Field(default=False, description="Is the device touch capable")
 
 
 class TrailHubModel(CreateLoggingModel, Document):
     created: datetime = Field(default=datetime.now(), description="Date of creation")
-    anonymous: Optional[bool] = Field(default=False, description="Is the user anonymous")
+    anonymous: Optional[bool] = Field(default=None, description="Is the user anonymous")
 
     class Settings:
         name = settings.TRAILHUB_MODEL_NAME.split(".")[1]
