@@ -16,6 +16,8 @@ python-slugify = "^8.0.4"
 beanie = "^1.27.0"
 
 
+httptools = "^0.6.4"
+user-agents = "^2.2.0"
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^4.0.1"
 
