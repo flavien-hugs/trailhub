@@ -5,7 +5,7 @@ ifneq (,$(wildcard ./dotenv/*.env))
 endif
 
 # Définition des fichiers Docker Compose
-COMPOSE_FILES := -f docker-compose.local.yaml
+COMPOSE_FILES := -f docker-compose.yaml
 
 # Objectif par défaut
 .DEFAULT_GOAL := help
