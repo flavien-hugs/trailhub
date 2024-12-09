@@ -63,6 +63,10 @@ jobs:
         steps:
             - name: 'Checkout code'
               uses: actions/checkout@v3
+              with:
+                submodules: recursive
+                token: ${{ secrets.GH_SUBMODULE_TOKEN_COMMON }}
+                fetch-depth: 0
 
             - name: 'Cache pip and poetry'
               uses: ./.github/actions/cache-package

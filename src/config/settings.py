@@ -8,19 +8,11 @@ from pydantic_settings import BaseSettings
 class TrailHubSettings(BaseSettings):
     # APP CONFIG
     APP_NAME: Optional[str] = Field(default="TrailHub", alias="APP_NAME", description="Name of the application")
-    APP_HOSTNAME: Optional[str] = Field(
-        default="0.0.0.0", alias="APP_HOSTNAME", description="Hostname of the application"
-    )
+    APP_HOSTNAME: Optional[str] = Field(default="0.0.0.0", alias="APP_HOSTNAME", description="Hostname of the application")
     APP_RELOAD: Optional[bool] = Field(default=True, alias="APP_RELOAD", description="Enable/Disable auto-reload")
-    APP_LOG_LEVEL: Optional[str] = Field(
-        default="debug", alias="APP_LOG_LEVEL", description="Log level of the application"
-    )
-    APP_ACCESS_LOG: Optional[bool] = Field(
-        default=True, alias="APP_ACCESS_LOG", description="Enable/Disable access log"
-    )
-    APP_DEFAULT_PORT: Optional[int] = Field(
-        default=8000, alias="APP_DEFAULT_PORT", description="Default port of the application"
-    )
+    APP_LOG_LEVEL: Optional[str] = Field(default="debug", alias="APP_LOG_LEVEL", description="Log level of the application")
+    APP_ACCESS_LOG: Optional[bool] = Field(default=True, alias="APP_ACCESS_LOG", description="Enable/Disable access log")
+    APP_DEFAULT_PORT: Optional[int] = Field(default=8000, alias="APP_DEFAULT_PORT", description="Default port of the application")
     ALLOW_ANONYM_PUSH: Optional[bool] = Field(
         default=False, alias="ALLOW_ANONYM_PUSH", description="Allow anonymous push to the config"
     )
@@ -29,9 +21,7 @@ class TrailHubSettings(BaseSettings):
     )
 
     # APP MODEL NAME
-    TRAILHUB_MODEL_NAME: Optional[str] = Field(
-        default="unsta.logs", alias="TRAILHUB_MODEL_NAME", description="Name of the model"
-    )
+    TRAILHUB_MODEL_NAME: Optional[str] = Field(default="unsta.logs", alias="TRAILHUB_MODEL_NAME", description="Name of the model")
 
     # DATABASE CONFIG
     MONGO_DB: Optional[str] = Field(default="unsta", alias="MONGO_DB", description="Name of the config")

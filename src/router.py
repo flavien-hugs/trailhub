@@ -31,9 +31,9 @@ async def create_log(request: Request, payload: CreateLoggingModel = Body(...)):
         address_ip = forwarded_for.split(",")[0]
 
     address_mac = (
-            get_mac_address(ip=address_ip)
-            or get_mac_address(interface="eth0")
-            or get_mac_address(ip=address_ip, network_request=True)
+        get_mac_address(ip=address_ip)
+        or get_mac_address(interface="eth0")
+        or get_mac_address(ip=address_ip, network_request=True)
     )
 
     # Retrieve User-Agent header
@@ -57,15 +57,10 @@ async def create_log(request: Request, payload: CreateLoggingModel = Body(...)):
     return new_log
 
 
-@trailhub_router.get(
-    "",
-    response_model=customize_page(TrailHubModel),
-    summary="Get all logs",
-    status_code=status.HTTP_200_OK
-)
+@trailhub_router.get("", response_model=customize_page(TrailHubModel), summary="Get all logs", status_code=status.HTTP_200_OK)
 async def get_logs(
-        filter: LoggingFilter = Depends(LoggingFilter),
-        sort: Optional[SortEnum] = Query(default=None, description="Sort by created date: 'asc' or 'desc'"),
+    filter: LoggingFilter = Depends(LoggingFilter),
+    sort: Optional[SortEnum] = Query(default=None, description="Sort by created date: 'asc' or 'desc'"),
 ):
     query = filter.model_dump(exclude_none=True, exclude_unset=True)
     if filter.source:
@@ -95,11 +90,7 @@ async def get_logs(
     return await paginate(logs)
 
 
-@trailhub_router.get(
-    "/{id}",
-    response_model=TrailHubModel,
-    summary="Retrieve log by ID", status_code=status.HTTP_200_OK
-)
+@trailhub_router.get("/{id}", response_model=TrailHubModel, summary="Retrieve log by ID", status_code=status.HTTP_200_OK)
 async def retrieve_log(id: PydanticObjectId):
     if (doc := await TrailHubModel.find_one({"_id": id})) is None:
         raise CustomHTTPException(

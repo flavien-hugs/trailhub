@@ -53,10 +53,11 @@ async def test_get_logs_cases(http_client_api, create_trailhub, sort):
 
     # CASE 2: Retrieve logs with filter and return 200
     case_two = await http_client_api.get(
-        "/logs", params={
+        "/logs",
+        params={
             "source": create_trailhub.source,
             "user_id": create_trailhub.user_id,
-        }
+        },
     )
     assert case_two.status_code == status.HTTP_200_OK, case_two.text
     assert case_two.json()["total"] >= 1
@@ -76,11 +77,7 @@ async def test_get_logs_cases(http_client_api, create_trailhub, sort):
     # CASE 5: Retrieve logs with created filter and return 200
     case_five = await http_client_api.get(
         "/logs",
-        params={
-            "user_id": create_trailhub.user_id,
-            "created": create_trailhub.created,
-            "anonymous": create_trailhub.anonymous
-        }
+        params={"user_id": create_trailhub.user_id, "created": create_trailhub.created, "anonymous": create_trailhub.anonymous},
     )
     assert case_five.status_code == status.HTTP_200_OK, case_five.text
     assert case_five.json()["total"] >= 0

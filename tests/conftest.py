@@ -18,6 +18,7 @@ def fake_data():
 @pytest.fixture
 async def fixture_app():
     from src.main import app
+
     yield app
 
 
@@ -46,10 +47,7 @@ async def clean_db(mongo_mock_client, fixture_model):
 
 @pytest.fixture
 async def http_client_api(clean_db, fixture_app):
-    async with AsyncClient(
-            transport=ASGITransport(app=fixture_app),
-            base_url="http://api.trailhub.com"
-    ) as ac:
+    async with AsyncClient(transport=ASGITransport(app=fixture_app), base_url="http://api.trailhub.com") as ac:
         yield ac
 
 
@@ -64,7 +62,5 @@ def trailhub_data(fake_data):
 
 @pytest.fixture
 async def create_trailhub(fixture_model, trailhub_data, fake_data):
-    trailhub = await fixture_model.TrailHubModel(
-        **trailhub_data, address_ip=fake_data.ipv6()
-    ).create()
+    trailhub = await fixture_model.TrailHubModel(**trailhub_data, address_ip=fake_data.ipv6()).create()
     return trailhub
