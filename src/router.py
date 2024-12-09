@@ -1,9 +1,11 @@
 from typing import Optional
 
 from beanie import PydanticObjectId
-from fastapi import APIRouter, Body, Depends, Query, status
+from fastapi import APIRouter, Body, Depends, Query, Request, status
 from fastapi_pagination.ext.beanie import paginate
+from getmac import get_mac_address
 from pymongo import ASCENDING, DESCENDING
+from user_agents import parse
 
 from src.common.helpers.error_codes import AppErrorCodes
 from src.common.helpers.exception import CustomHTTPException
@@ -18,9 +20,40 @@ trailhub_router = APIRouter(
 
 
 @trailhub_router.post("", response_model=TrailHubModel, status_code=status.HTTP_201_CREATED, summary="Create a new log")
-async def create_log(payload: CreateLoggingModel = Body(...)):
-    data = payload.model_copy(update={"source": payload.source.lower()})
-    new_log = await TrailHubModel(**data.model_dump()).create()
+async def create_log(request: Request, payload: CreateLoggingModel = Body(...)):
+
+    # Retrieve client IP address
+    address_ip = request.client.host
+
+    # If behind a proxy, use the X-Forwarded-For header
+    forwarded_for = request.headers.get("X-Forwarded-For")
+    if forwarded_for:
+        address_ip = forwarded_for.split(",")[0]
+
+    address_mac = (
+            get_mac_address(ip=address_ip)
+            or get_mac_address(interface="eth0")
+            or get_mac_address(ip=address_ip, network_request=True)
+    )
+
+    # Retrieve User-Agent header
+    user_agent_str = request.headers.get("User-Agent", "")
+    user_agent = parse(user_agent_str)
+    if not user_agent:
+        user_agent = parse("")
+
+    new_log = await TrailHubModel(
+        **payload.model_dump(),
+        device=user_agent.get_device(),
+        os=user_agent.get_os(),
+        browser=user_agent.get_browser(),
+        is_tablet=user_agent.is_tablet,
+        is_mobile=user_agent.is_mobile,
+        is_pc=user_agent.is_pc,
+        is_bot=user_agent.is_bot,
+        address_ip=address_ip,
+        address_mac=address_mac,
+    ).create()
     return new_log
 
 
@@ -36,7 +69,7 @@ async def get_logs(
 ):
     query = filter.model_dump(exclude_none=True, exclude_unset=True)
     if filter.source:
-        query.update({"source": filter.source.lower()})
+        query.update({"source": filter.source})
     elif filter.user_id:
         query.update({"user_id": filter.user_id})
     elif filter.device:
