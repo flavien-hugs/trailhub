@@ -20,7 +20,10 @@ getmac = "^0.9.5"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^4.0.1"
-
+black = "^24.10.0"
+flake8 = "^7.1.1"
+bandit = "^1.8.0"
+flake8-pyproject = "^1.2.3"
 
 [tool.poetry.group.test.dependencies]
 pytest = "^8.3.3"
@@ -37,6 +40,39 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
 app = 'src.run:app'
+
+[tool.flake8]
+max-line-length = 130
+exclude = [
+    ".git",
+    "__pycache__",
+    ".venv",
+    ".pytest_cache",
+    ".tox",
+    ".eggs"
+]
+
+[tool.black]
+line-length = 130
+include = '\.pyi?$'
+exclude = '''
+(
+  /(
+      \.eggs         # exclude a few common directories in the
+    | \.git          # root of the project
+    | \.hg
+    | \.mypy_cache
+    | \.tox
+    | \.venv
+    | \.docker
+    | \*.egg-info
+    | _build
+    | buck-out
+    | build
+    | dist
+  )/
+)
+'''
 
 [tool.pytest.ini_options]
 env_files = "tests/.test.env"

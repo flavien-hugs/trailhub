@@ -25,7 +25,6 @@ class CreateLoggingModel(LoggingBaseModel):
     source: str = Field(..., description="Source of the log")
     message: str = Field(..., description="Message to log")
 
-
     @field_validator("source", mode="before")
     def source_to_lower(cls, value):
         return value.lower().replace(" ", "")

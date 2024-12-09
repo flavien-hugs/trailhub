@@ -1,6 +1,5 @@
 import pytest
 from fastapi import status
-from slugify import slugify
 from src.common.helpers.error_codes import AppErrorCode
 
 
