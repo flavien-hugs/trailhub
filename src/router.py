@@ -7,7 +7,7 @@ from getmac import get_mac_address
 from pymongo import ASCENDING, DESCENDING
 from user_agents import parse
 
-from src.common.helpers.error_codes import AppErrorCodes
+from src.common.helpers.error_codes import AppErrorCode
 from src.common.helpers.exception import CustomHTTPException
 from src.common.helpers.utils import customize_page, SortEnum
 from src.models import CreateLoggingModel, LoggingFilter, TrailHubModel
@@ -101,10 +101,10 @@ async def get_logs(
     summary="Retrieve log by ID", status_code=status.HTTP_200_OK
 )
 async def retrieve_log(id: PydanticObjectId):
-    if (document := await TrailHubModel.get(id)) is None:
+    if (doc := await TrailHubModel.find_one({"_id": id})) is None:
         raise CustomHTTPException(
-            error_code=AppErrorCodes.DOCUMENT_NOT_FOUND,
+            error_code=AppErrorCode.DOCUMENT_NOT_FOUND,
             error_message=f"Document with '{id}' not found.",
             status_code=status.HTTP_404_NOT_FOUND,
         )
-    return document
+    return doc
