@@ -17,8 +17,6 @@ services:
             - "./src/:/app/src"
         depends_on:
             - mongo
-        ports:
-            - "8993:${APP_DEFAULT_PORT}"
         env_file:
             - ./dotenv/app.env
         logging: *logging
@@ -32,8 +30,6 @@ services:
             MONGO_PASSWORD: "${MONGO_PASSWORD}"
             MONGO_INITDB_ROOT_USERNAME: "${MONGO_USER}"
             MONGO_INITDB_ROOT_PASSWORD: "${MONGO_PASSWORD}"
-        ports:
-            - "27040:${MONGO_PORT}"
         volumes:
             - trailhub_data:/data/db
         env_file:
