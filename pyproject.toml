@@ -13,11 +13,11 @@ uvloop = "^0.21.0"
 pydantic-settings = "^2.6.1"
 fastapi-pagination = "^0.12.32"
 python-slugify = "^8.0.4"
-beanie = "^1.27.0"
-
-
+beanie = "^1.28.0"
 httptools = "^0.6.4"
 user-agents = "^2.2.0"
+getmac = "^0.9.5"
+
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^4.0.1"
 
@@ -29,6 +29,7 @@ pytest-cov = "^6.0.0"
 pytest-asyncio = "^0.24.0"
 mongomock-motor = "^0.0.34"
 pytest-dotenv = "^0.5.2"
+faker = "^33.1.0"
 
 [build-system]
 requires = ["poetry-core"]
