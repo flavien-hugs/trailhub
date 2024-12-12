@@ -174,3 +174,4 @@ dotenv/
 .ruff_cache
 .tokens.txt
 docker-compose.local.yaml
+monitoring/
