@@ -173,5 +173,9 @@ notebook.ipynb
 dotenv/
 .ruff_cache
 .tokens.txt
+docker-compose.prom.yaml
 docker-compose.local.yaml
 monitoring/
+profile.*
+profile.html
+profile.json

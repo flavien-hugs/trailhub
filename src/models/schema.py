@@ -1,12 +1,12 @@
 from datetime import datetime
 from typing import Optional, Union
 
-from beanie import PydanticObjectId
+from beanie import BeanieObjectId
 from pydantic import BaseModel, Field, field_validator
 
 
 class LoggingBaseModel(BaseModel):
-    user_id: Optional[Union[PydanticObjectId, str]] = Field(default=None, description="User ID")
+    user_id: Optional[Union[BeanieObjectId, str]] = Field(default=None, description="User ID")
 
 
 class LoggingFilter(LoggingBaseModel):
@@ -26,5 +26,5 @@ class CreateLoggingModel(LoggingBaseModel):
     message: str = Field(..., description="Message to log")
 
     @field_validator("source", mode="before")
-    def source_to_lower(cls, value):
+    def source_to_lower(cls, value):  # noqa: B902
         return value.lower().replace(" ", "")

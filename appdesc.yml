@@ -1,0 +1,11 @@
+- app:
+    name: "trailhub"
+    title:
+        fr: "Système d'enregistrement des actions effectuées par l'utilisateur dans le système."
+        en: "System for recording user actions in the system."
+    permissions:
+        -
+            code: "trailhub:can-read-trail"
+            desc:
+                fr: "Peut lire les actions effectuées par l'utilisateur dans le système."
+                en: "Can read user actions in the system."
