@@ -1,15 +1,19 @@
 from typing import Optional
+from urllib.parse import urljoin
 
-from beanie import PydanticObjectId
+from beanie import BeanieObjectId
 from fastapi import APIRouter, Body, Depends, Query, Request, status
 from fastapi_pagination.ext.beanie import paginate
 from getmac import get_mac_address
 from pymongo import ASCENDING, DESCENDING
 from user_agents import parse
 
+from src.common.depends.permission import CheckAccessAllow, VerifyAccessToken
 from src.common.helpers.error_codes import AppErrorCode
 from src.common.helpers.exception import CustomHTTPException
-from src.common.helpers.utils import customize_page, SortEnum
+from src.common.helpers.pagination import customize_page
+from src.common.helpers.utils import SortEnum
+from src.config import settings
 from src.models import CreateLoggingModel, LoggingFilter, TrailHubModel
 
 trailhub_router = APIRouter(
@@ -18,8 +22,17 @@ trailhub_router = APIRouter(
     responses={404: {"description": "Not found"}},
 )
 
+VERIFY_ACCESS_TOKEN_URL = urljoin(settings.API_AUTH_URL_BASE, settings.API_AUTH_VALIDATE_TOKEN_ENDPOINT)
+CHECK_ACCESS_ALLOW_URL = urljoin(settings.API_AUTH_URL_BASE, settings.API_AUTH_CHECK_ACCESS_ENDPOINT)
 
-@trailhub_router.post("", response_model=TrailHubModel, status_code=status.HTTP_201_CREATED, summary="Create a new log")
+
+@trailhub_router.post(
+    "",
+    dependencies=[Depends(VerifyAccessToken(url=VERIFY_ACCESS_TOKEN_URL))] if settings.ALLOW_ANONYM_PUSH else [],
+    response_model=TrailHubModel,
+    status_code=status.HTTP_201_CREATED,
+    summary="Create a new log",
+)
 async def create_log(request: Request, payload: CreateLoggingModel = Body(...)):
 
     # Retrieve client IP address
@@ -57,7 +70,13 @@ async def create_log(request: Request, payload: CreateLoggingModel = Body(...)):
     return new_log
 
 
-@trailhub_router.get("", response_model=customize_page(TrailHubModel), summary="Get all logs", status_code=status.HTTP_200_OK)
+@trailhub_router.get(
+    "",
+    dependencies=[Depends(CheckAccessAllow(url=CHECK_ACCESS_ALLOW_URL, permissions={"trailhub:can-read-trail"}))],
+    response_model=customize_page(TrailHubModel),
+    summary="Get all logs",
+    status_code=status.HTTP_200_OK,
+)
 async def get_logs(
     filter: LoggingFilter = Depends(LoggingFilter),
     sort: Optional[SortEnum] = Query(default=None, description="Sort by created date: 'asc' or 'desc'"),
@@ -86,12 +105,17 @@ async def get_logs(
 
     _sort = DESCENDING if sort == SortEnum.DESC else ASCENDING
     logs = TrailHubModel.find(query, sort=[("created", _sort)])
+    return await paginate(query=logs)
 
-    return await paginate(logs)
 
-
-@trailhub_router.get("/{id}", response_model=TrailHubModel, summary="Retrieve log by ID", status_code=status.HTTP_200_OK)
-async def retrieve_log(id: PydanticObjectId):
+@trailhub_router.get(
+    "/{id}",
+    dependencies=[Depends(CheckAccessAllow(url=CHECK_ACCESS_ALLOW_URL, permissions={"trailhub:can-read-trail"}))],
+    response_model=TrailHubModel,
+    summary="Retrieve log by ID",
+    status_code=status.HTTP_200_OK,
+)
+async def retrieve_log(id: BeanieObjectId):
     if (doc := await TrailHubModel.find_one({"_id": id})) is None:
         raise CustomHTTPException(
             error_code=AppErrorCode.DOCUMENT_NOT_FOUND,

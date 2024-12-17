@@ -7,13 +7,13 @@ packages = [{include = "src" }]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.12"
-fastapi = {extras = ["standard"], version = "^0.115.5"}
+python = "3.12.3"
+fastapi = {version = "^0.112.2", extras = ["all"]}
+beanie = "1.26.0"
 uvloop = "^0.21.0"
 pydantic-settings = "^2.6.1"
 fastapi-pagination = "^0.12.32"
 python-slugify = "^8.0.4"
-beanie = "^1.28.0"
 httptools = "^0.6.4"
 user-agents = "^2.2.0"
 getmac = "^0.9.5"
@@ -25,6 +25,7 @@ flake8 = "^7.1.1"
 bandit = "^1.8.0"
 flake8-pyproject = "^1.2.3"
 
+scalene = "^1.5.49"
 [tool.poetry.group.test.dependencies]
 pytest = "^8.3.3"
 coverage = "^7.6.8"

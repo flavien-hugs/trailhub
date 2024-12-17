@@ -1,3 +1,5 @@
+from unittest import mock
+
 import pytest
 from beanie import init_beanie
 from httpx import ASGITransport, AsyncClient
@@ -43,6 +45,22 @@ async def mongo_mock_client(fixture_app, fixture_model):
 async def clean_db(mongo_mock_client, fixture_model):
     for model in [fixture_model.TrailHubModel]:
         await model.delete_all()
+
+
+@pytest.fixture()
+def mock_check_access_allow():
+    with mock.patch(
+        "src.common.depends.permission.CheckAccessAllow.__call__", side_effect=lambda *args, **kwargs: True, return_value=True
+    ):
+        yield
+
+
+@pytest.fixture()
+def mock_validate_access_allow():
+    with mock.patch(
+        "src.common.depends.permission.VerifyAccessToken.__call__", side_effect=lambda *args, **kwargs: True, return_value=True
+    ):
+        yield
 
 
 @pytest.fixture

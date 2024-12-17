@@ -22,6 +22,12 @@ class TrailHubSettings(BaseSettings):
 
     # APP MODEL NAME
     TRAILHUB_MODEL_NAME: Optional[str] = Field(default="unsta.logs", alias="TRAILHUB_MODEL_NAME", description="Name of the model")
+    APP_DESC_DB_COLLECTION: Optional[str] = Field(
+        default="unsta.appdesc", alias="APP_DESC_DB_COLLECTION", description="Collection for app description"
+    )
+    PERMS_DB_COLLECTION: Optional[str] = Field(
+        default="unsta.permissions", alias="PERMS_DB_COLLECTION", description="Collection for permissions"
+    )
 
     # DATABASE CONFIG
     MONGO_DB: Optional[str] = Field(default="unsta", alias="MONGO_DB", description="Name of the config")

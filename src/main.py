@@ -4,10 +4,10 @@ from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 from fastapi_pagination import add_pagination
 
-from src.common.config import shutdown_db_client, startup_db_client
+from src.common.config import shutdown_db_client, startup_db_client, setup_permission as perms
 from src.config import settings
 from src.models import TrailHubModel
-from .router import trailhub_router
+from .endpoint import trailhub_router
 from src.common.helpers.exception import setup_exception_handlers
 
 
@@ -19,6 +19,9 @@ async def lifespan(app: FastAPI):
         database_name=settings.MONGO_DB,
         document_models=[TrailHubModel],
     )
+
+    await perms.load_app_description(app.mongo_db_client, settings.APP_DESC_DB_COLLECTION)
+    await perms.load_app_permissions(app.mongo_db_client, settings.PERMS_DB_COLLECTION)
 
     yield
 
@@ -46,5 +49,5 @@ async def ping():
 
 
 app.include_router(router=trailhub_router)
-add_pagination(parent=app)
+add_pagination(app)
 setup_exception_handlers(app=app)
