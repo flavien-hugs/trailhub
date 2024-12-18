@@ -57,9 +57,9 @@ async def create_log(request: Request, payload: CreateLoggingModel = Body(...)):
 
     new_log = await TrailHubModel(
         **payload.model_dump(),
-        device=user_agent.get_device(),
-        os=user_agent.get_os(),
-        browser=user_agent.get_browser(),
+        device=user_agent.device.family,
+        os=user_agent.os.family,
+        browser=user_agent.browser.family,
         is_tablet=user_agent.is_tablet,
         is_mobile=user_agent.is_mobile,
         is_pc=user_agent.is_pc,
