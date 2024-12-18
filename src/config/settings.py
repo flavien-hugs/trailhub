@@ -43,7 +43,9 @@ class TrailHubSettings(BaseSettings):
         default="/check-access", alias="API_AUTH_CHECK_ACCESS_ENDPOINT", description="Endpoint to check access"
     )
     API_AUTH_CHECK_VALIDATE_ACCESS_TOKEN: Optional[str] = Field(
-        default="/check-validate-access-token", alias="API_AUTH_CHECK_VALIDATE_ACCESS_TOKEN", description="Endpoint to validate token"
+        default="/check-validate-access-token",
+        alias="API_AUTH_CHECK_VALIDATE_ACCESS_TOKEN",
+        description="Endpoint to validate token",
     )
 
 
