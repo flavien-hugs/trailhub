@@ -25,7 +25,7 @@ async def test_create_log_cases(http_client_api, mock_check_access_allow, mock_v
         headers={"Authorization": "Bearer fake_token"},
     )
     assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY, response.text
-    assert response.json()["error_code"] == AppErrorCode.UNPROCESSABLE_ENTITY
+    assert response.json()["code_error"] == AppErrorCode.UNPROCESSABLE_ENTITY
 
 
 @pytest.mark.asyncio
@@ -42,13 +42,13 @@ async def test_retrieve_log_cases(http_client_api, mock_check_access_allow, crea
     # CASE 2: Retrieve log with invalid ID and return 422
     case_two = await http_client_api.get("/logs/invalid_id", headers={"Authorization": "Bearer fake_token"})
     assert case_two.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY, case_two.text
-    assert case_two.json()["error_code"] == AppErrorCode.UNPROCESSABLE_ENTITY
+    assert case_two.json()["code_error"] == AppErrorCode.UNPROCESSABLE_ENTITY
 
     # CASE 3: Retrieve log with non-existent ID and return 404
     case_three = await http_client_api.get("/logs/6756f47af9096fa27c21d567", headers={"Authorization": "Bearer fake_token"})
     assert case_three.status_code == status.HTTP_404_NOT_FOUND, case_three.text
-    assert case_three.json()["error_code"] == AppErrorCode.DOCUMENT_NOT_FOUND
-    assert case_three.json()["error_message"] == "Document with '6756f47af9096fa27c21d567' not found."
+    assert case_three.json()["code_error"] == AppErrorCode.DOCUMENT_NOT_FOUND
+    assert case_three.json()["message_error"] == "Document with '6756f47af9096fa27c21d567' not found."
 
 
 @pytest.mark.asyncio

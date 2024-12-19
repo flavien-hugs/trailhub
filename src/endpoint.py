@@ -22,7 +22,7 @@ trailhub_router = APIRouter(
     responses={404: {"description": "Not found"}},
 )
 
-VERIFY_ACCESS_TOKEN_URL = urljoin(settings.API_AUTH_URL_BASE, settings.API_AUTH_VALIDATE_TOKEN_ENDPOINT)
+VERIFY_ACCESS_TOKEN_URL = urljoin(settings.API_AUTH_URL_BASE, settings.API_AUTH_CHECK_VALIDATE_ACCESS_TOKEN)
 CHECK_ACCESS_ALLOW_URL = urljoin(settings.API_AUTH_URL_BASE, settings.API_AUTH_CHECK_ACCESS_ENDPOINT)
 
 
@@ -118,8 +118,8 @@ async def get_logs(
 async def retrieve_log(id: BeanieObjectId):
     if (doc := await TrailHubModel.find_one({"_id": id})) is None:
         raise CustomHTTPException(
-            error_code=AppErrorCode.DOCUMENT_NOT_FOUND,
-            error_message=f"Document with '{id}' not found.",
+            code_error=AppErrorCode.DOCUMENT_NOT_FOUND,
+            message_error=f"Document with '{id}' not found.",
             status_code=status.HTTP_404_NOT_FOUND,
         )
     return doc
