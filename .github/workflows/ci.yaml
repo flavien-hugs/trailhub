@@ -1,4 +1,4 @@
-name: "CI for SFS project"
+name: "CI for TRAILHUB project"
 
 on:
   push:
