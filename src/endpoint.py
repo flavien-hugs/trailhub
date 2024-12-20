@@ -52,14 +52,22 @@ async def create_log(request: Request, payload: CreateLoggingModel = Body(...)):
     # Retrieve User-Agent header
     user_agent_str = request.headers.get("User-Agent", "")
     user_agent = parse(user_agent_str)
-    if not user_agent:
-        user_agent = parse("")
+
+    # Parse User-Agent header
+    if user_agent:
+        device = user_agent.device.family
+        os = user_agent.os.family
+        browser = user_agent.browser.family
+    else:
+        device = "Unknown"
+        os = "Unknown"
+        browser = "Unknown"
 
     new_log = await TrailHubModel(
         **payload.model_dump(),
-        device=user_agent.device.family,
-        os=user_agent.os.family,
-        browser=user_agent.browser.family,
+        device=device,
+        os=os,
+        browser=browser,
         is_tablet=user_agent.is_tablet,
         is_mobile=user_agent.is_mobile,
         is_pc=user_agent.is_pc,
@@ -67,6 +75,7 @@ async def create_log(request: Request, payload: CreateLoggingModel = Body(...)):
         address_ip=address_ip,
         address_mac=address_mac,
     ).create()
+
     return new_log
 
 
